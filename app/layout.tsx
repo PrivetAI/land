@@ -29,7 +29,7 @@ export default function RootLayout({
               <div className="font-bold text-xl gradient-text">
                 <a href="/" >AutoTeam</a></div>
               <div className="flex space-x-8">
-                <a href="/blog" className="text-gray-700 hover:text-primary transition-colors">Блог</a>
+                {/* <a href="/blog" className="text-gray-700 hover:text-primary transition-colors">Блог</a> */}
                 <a href="#contact" className="btn-primary">Связаться</a>
               </div>
             </div>
