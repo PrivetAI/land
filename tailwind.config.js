@@ -1,5 +1,4 @@
-const { designSystem } = require('./design-system');
-
+//editing forbidden
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,157 +9,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: 'rgb(var(--primary) / <alpha-value>)',
-        secondary: 'rgb(var(--secondary) / <alpha-value>)',
-        accent: 'rgb(var(--accent) / <alpha-value>)',
-        success: 'rgb(var(--success) / <alpha-value>)',
-        warning: 'rgb(var(--warning) / <alpha-value>)',
-        error: 'rgb(var(--error) / <alpha-value>)',
-        background: 'rgb(var(--background) / <alpha-value>)',
-        surface: 'rgb(var(--surface) / <alpha-value>)',
-        border: 'rgb(var(--border) / <alpha-value>)',
-        text: {
-          primary: 'rgb(var(--text-primary) / <alpha-value>)',
-          secondary: 'rgb(var(--text-secondary) / <alpha-value>)',
-          muted: 'rgb(var(--text-muted) / <alpha-value>)'
-        }
+        primary: '#2563eb',
+        secondary: '#7c3aed',
+        accent: '#06b6d4',
+        success: '#10b981',
+        warning: '#f59e0b',
+        error: '#ef4444'
       },
-      fontFamily: designSystem.typography.fontFamily,
-      fontSize: designSystem.typography.fontSize,
-      fontWeight: designSystem.typography.fontWeight,
-      spacing: designSystem.spacing,
-      borderRadius: designSystem.borderRadius,
-      boxShadow: designSystem.shadows,
-      screens: designSystem.breakpoints,
-      zIndex: designSystem.zIndex,
-      transitionDuration: designSystem.animation.duration,
-      transitionTimingFunction: designSystem.animation.timing
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif']
+      }
     },
   },
   plugins: [
-    function({ addUtilities, addComponents }) {
-      const utilities = {
-        '.heading-xl': {
-          fontSize: designSystem.typography.fontSize['4xl'][0],
-          lineHeight: designSystem.typography.fontSize['4xl'][1].lineHeight,
-          fontWeight: designSystem.typography.fontWeight.bold,
-          letterSpacing: '-0.025em',
-          color: 'rgb(var(--text-primary))',
-          '@screen md': {
-            fontSize: designSystem.typography.fontSize['6xl'][0],
-            lineHeight: designSystem.typography.fontSize['6xl'][1].lineHeight,
-          }
-        },
-        '.heading-lg': {
-          fontSize: designSystem.typography.fontSize['2xl'][0],
-          lineHeight: designSystem.typography.fontSize['2xl'][1].lineHeight,
-          fontWeight: designSystem.typography.fontWeight.semibold,
-          letterSpacing: '-0.025em',
-          color: 'rgb(var(--text-primary))',
-          '@screen md': {
-            fontSize: designSystem.typography.fontSize['4xl'][0],
-            lineHeight: designSystem.typography.fontSize['4xl'][1].lineHeight,
-          }
-        },
-        '.heading-md': {
-          fontSize: designSystem.typography.fontSize.xl[0],
-          lineHeight: designSystem.typography.fontSize.xl[1].lineHeight,
-          fontWeight: designSystem.typography.fontWeight.semibold,
-          color: 'rgb(var(--text-primary))',
-          '@screen md': {
-            fontSize: designSystem.typography.fontSize['2xl'][0],
-            lineHeight: designSystem.typography.fontSize['2xl'][1].lineHeight,
-          }
-        },
-        '.heading-sm': {
-          fontSize: designSystem.typography.fontSize.lg[0],
-          lineHeight: designSystem.typography.fontSize.lg[1].lineHeight,
-          fontWeight: designSystem.typography.fontWeight.medium,
-          color: 'rgb(var(--text-primary))'
-        },
-        '.body-lg': {
-          fontSize: designSystem.typography.fontSize.lg[0],
-          lineHeight: designSystem.typography.fontSize.lg[1].lineHeight,
-          color: 'rgb(var(--text-secondary))'
-        },
-        '.body': {
-          fontSize: designSystem.typography.fontSize.base[0],
-          lineHeight: designSystem.typography.fontSize.base[1].lineHeight,
-          color: 'rgb(var(--text-secondary))'
-        },
-        '.body-sm': {
-          fontSize: designSystem.typography.fontSize.sm[0],
-          lineHeight: designSystem.typography.fontSize.sm[1].lineHeight,
-          color: 'rgb(var(--text-secondary))'
-        }
-      };
-
-      const components = {
-        '.btn-primary': {
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontWeight: designSystem.typography.fontWeight.medium,
-          borderRadius: designSystem.borderRadius.lg,
-          transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-          background: 'rgb(var(--primary))',
-          color: 'white',
-          padding: `${designSystem.spacing[2]} ${designSystem.spacing[4]}`,
-          height: designSystem.spacing[10],
-          '&:hover': {
-            opacity: '0.9',
-            boxShadow: designSystem.shadows.md
-          },
-          '&:focus': {
-            outline: 'none',
-            ringWidth: '2px',
-            ringColor: 'rgb(var(--primary))',
-            ringOffsetWidth: '2px'
-          },
-          '&:disabled': {
-            opacity: '0.5',
-            cursor: 'not-allowed'
-          }
-        },
-        '.btn-outline': {
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontWeight: designSystem.typography.fontWeight.medium,
-          borderRadius: designSystem.borderRadius.lg,
-          transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-          border: '2px solid rgb(var(--primary))',
-          color: 'rgb(var(--primary))',
-          backgroundColor: 'transparent',
-          padding: `${designSystem.spacing[2]} ${designSystem.spacing[4]}`,
-          height: designSystem.spacing[10],
-          '&:hover': {
-            backgroundColor: 'rgb(var(--primary))',
-            color: 'white'
-          },
-          '&:focus': {
-            outline: 'none',
-            ringWidth: '2px',
-            ringColor: 'rgb(var(--primary))',
-            ringOffsetWidth: '2px'
-          }
-        },
-        '.card': {
-          backgroundColor: 'rgb(var(--surface))',
-          borderRadius: designSystem.borderRadius.xl,
-          border: '1px solid rgb(var(--border))',
-          padding: designSystem.spacing[6],
-          transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: designSystem.shadows.sm,
-          '&:hover': {
-            boxShadow: designSystem.shadows.md,
-            transform: 'translateY(-2px)'
-          }
-        }
-      };
-
-      addUtilities(utilities);
-      addComponents(components);
+    function({ addUtilities }) {
+      addUtilities({
+        '.heading-xl': '@apply text-4xl md:text-6xl font-bold tracking-tight',
+        '.heading-lg': '@apply text-2xl md:text-4xl font-semibold tracking-tight',
+        '.heading-md': '@apply text-xl md:text-2xl font-semibold',
+        '.body': '@apply text-base leading-relaxed text-gray-600',
+        '.gradient-text': '@apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent',
+        '.btn-primary': '@apply bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105',
+        '.btn-outline': '@apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white',
+        '.card': '@apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md hover:-translate-y-1'
+      });
     }
   ],
 };
