@@ -36,7 +36,6 @@ export default function RootLayout({
           </div>
         </nav>
         <main className="pt-16">{children}</main>
-        {/* <ChatBot /> */}
       </body>
     </html>
   );

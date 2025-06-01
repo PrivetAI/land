@@ -12,7 +12,8 @@ export default function HomePage() {
       <Services />
       <Process />
       <About />
-      <Pricing />   
+      <Pricing />
+      <Contact />
     </div>
   );
 }

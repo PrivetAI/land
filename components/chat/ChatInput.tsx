@@ -1,50 +1,45 @@
 'use client';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChatMessage as ChatMessageType } from '@/lib/types';
-import { Bot, User } from 'lucide-react';
+import { Send } from 'lucide-react';
 
-interface ChatMessageProps {
-  message: ChatMessageType;
+interface ChatInputProps {
+  onSendMessage: (message: string) => void;
+  disabled?: boolean;
 }
 
-export const ChatMessage = ({ message }: ChatMessageProps) => {
-  const isUser = message.role === 'user';
+export const ChatInput = ({ onSendMessage, disabled }: ChatInputProps) => {
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (message.trim() && !disabled) {
+      onSendMessage(message.trim());
+      setMessage('');
+    }
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`flex ${isUser ? 'justify-end' : 'justify-start'} space-x-2`}
-    >
-      {!isUser && (
-        <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center flex-shrink-0">
-          <Bot className="h-4 w-4 text-white" />
-        </div>
-      )}
-      
-      <div className={`max-w-[80%] ${isUser ? 'order-first' : ''}`}>
-        <div
-          className={`px-4 py-2 rounded-lg ${
-            isUser
-              ? 'bg-gradient-primary text-white rounded-br-sm'
-              : 'bg-gray-100 text-gray-900 rounded-bl-sm'
-          }`}
+    <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4">
+      <div className="flex space-x-2">
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Введите сообщение..."
+          disabled={disabled}
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none disabled:opacity-50"
+        />
+        <motion.button
+          type="submit"
+          disabled={disabled || !message.trim()}
+          className="bg-gradient-primary text-white p-2 rounded-lg disabled:opacity-50"
+          whileHover={!(disabled || !message.trim()) ? { scale: 1.05 } : {}}
+          whileTap={!(disabled || !message.trim()) ? { scale: 0.95 } : {}}
         >
-          <p className="body leading-relaxed">{message.content}</p>
-        </div>
-        <p className={`text-xs text-gray-500 mt-1 ${isUser ? 'text-right' : 'text-left'}`}>
-          {message.timestamp.toLocaleTimeString('ru-RU', {
-            hour: '2-digit',
-            minute: '2-digit'
-          })}
-        </p>
+          <Send className="h-5 w-5" />
+        </motion.button>
       </div>
-      
-      {isUser && (
-        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
-          <User className="h-4 w-4 text-gray-600" />
-        </div>
-      )}
-    </motion.div>
+    </form>
   );
 };

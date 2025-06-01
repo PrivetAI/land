@@ -20,7 +20,7 @@ components/
 ├── sections/                  # Hero, Services, Process, Pricing, About, Contact
 ├── chat/                      # ChatBot, ChatMessage, ChatInput, ChatButton
 ├── blog/                      # BlogCard, BlogPost, BlogList
-└── ui/                        # Button, Card, Modal, Input
+└── ui/                        # Button, Card, Input
 
 lib/
 ├── api.ts                     # API клиент
