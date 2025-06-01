@@ -1,65 +1,44 @@
+// lib/chat-store.ts
 import { create } from 'zustand';
 import { ChatMessage, ChatState } from './types';
-import { api } from './api';
 
 interface ChatStore extends ChatState {
-  toggleChat: () => void;
-  sendMessage: (content: string) => Promise<void>;
+  setTelegram: (telegram: string) => void;
   addMessage: (message: ChatMessage) => void;
+  setMessages: (messages: ChatMessage[]) => void;
+  clearChat: () => void;
+  authenticate: (telegram: string) => void;
 }
 
-export const useChatStore = create<ChatStore>((set, get) => ({
+export const useChatStore = create<ChatStore>((set) => ({
+  isAuthenticated: false,
+  telegram: '',
   messages: [],
-  isLoading: false,
-  isOpen: false,
-
-  toggleChat: () => set((state) => ({ isOpen: !state.isOpen })),
-
-  addMessage: (message) =>
+  
+  setTelegram: (telegram: string) => 
+    set({ telegram }),
+  
+  addMessage: (message: ChatMessage) => 
     set((state) => ({ messages: [...state.messages, message] })),
-
-  sendMessage: async (content: string) => {
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      role: 'user',
-      content,
-      timestamp: new Date(),
+  
+  setMessages: (messages: ChatMessage[]) => 
+    set({ messages }),
+  
+  clearChat: () => 
+    set({ messages: [], isAuthenticated: false, telegram: '' }),
+  
+  authenticate: (telegram: string) => {
+    const welcomeMessage: ChatMessage = {
+      id: '1',
+      role: 'assistant',
+      content: 'Привет! Я ИИ-консультант AutoTeam. Расскажите, какие процессы в вашем бизнесе хотите автоматизировать? Я помогу оценить возможности и подберу оптимальное решение.',
+      timestamp: new Date()
     };
-
-    set((state) => ({
-      messages: [...state.messages, userMessage],
-      isLoading: true,
-    }));
-
-    try {
-      const { messages } = get();
-      const response = await api.sendMessage({
-        message: content,
-        context: 'landing_page',
-        history: messages.slice(-5),
-      });
-
-      const assistantMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response.message,
-        timestamp: new Date(response.timestamp),
-      };
-
-      set((state) => ({
-        messages: [...state.messages, assistantMessage],
-        isLoading: false,
-      }));
-    } catch (error) {
-      set((state) => ({
-        messages: [...state.messages, {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: 'Извините, произошла ошибка. Попробуйте позже.',
-          timestamp: new Date(),
-        }],
-        isLoading: false,
-      }));
-    }
-  },
+    
+    set({ 
+      telegram, 
+      isAuthenticated: true, 
+      messages: [welcomeMessage] 
+    });
+  }
 }));

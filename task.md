@@ -1,7 +1,7 @@
-# ТЗ: Лендинг с AI-чатботом
+# ТЗ: Лендинг с AI-чатботом (Обновлено)
 
 ## Цель
-Маркетинговый лендинг для команды разработчиков-автоматизаторов с AI-чатботом и блогом.
+Маркетинговый лендинг для команды разработчиков-автоматизаторов с AI-чатботом для консультаций.
 
 ## Стек
 - Next.js 14, TypeScript, Tailwind CSS, Framer Motion
@@ -18,15 +18,25 @@ app/
 
 components/
 ├── sections/                  # Hero, Services, Process, Pricing, About, Contact
-├── chat/                      # ChatMessage, ChatInput (убрать ChatButton и ChatBot)
+├── chat/                      # ChatMessage, ChatInput, TelegramInput
 ├── blog/                      # BlogCard, BlogPost, BlogList
 └── ui/                        # Button, Card, Input
 ```
 
 ## Типы данных
 ```typescript
-interface ChatMessage { id: string; role: 'user'|'assistant'; content: string; timestamp: Date; }
-interface ContactForm { name: string; telegram: string; message: string; }
+interface ChatMessage { 
+  id: string; 
+  role: 'user' | 'assistant'; 
+  content: string; 
+  timestamp: Date; 
+}
+
+interface ChatState {
+  isAuthenticated: boolean;
+  telegram: string;
+  messages: ChatMessage[];
+}
 ```
 
 ## Секции лендинга
@@ -60,15 +70,17 @@ interface ContactForm { name: string; telegram: string; message: string; }
 - "Почему мы лучше конкурентов" (4 пункта)
 - Принципы работы (5 преимуществ)
 
-### **Contact (ОБНОВЛЕНО)**
+### Contact (ОБНОВЛЕНО)
+**Убрано:**
+- Форма заявки
+- Блок "Как мы начинаем работу"
 
-
-**Макет: ИИ-чат:**
-- Заголовок с иконкой бота
+**Макет: Только ИИ-чат:**
+- Заголовок: "Консультация с ИИ-ассистентом"
+- Поле ввода телеграма (при первом входе)
 - Область чата (фиксированная высота с прокруткой)
-- Поле ввода снизу + кнопка отправки
-- Начальное сообщение от бота
-
+- Поле ввода сообщения + кнопка отправки
+- Начальное сообщение от бота после авторизации
 
 ## Дизайн система
 
@@ -93,30 +105,42 @@ interface ContactForm { name: string; telegram: string; message: string; }
 .card { @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md hover:-translate-y-1; }
 ```
 
-## AI-чатбот
+## AI-чатбот (ОБНОВЛЕНО)
 
 ### Функции
 - Встроенный в секцию Contact
-- Отображение истории сообщений
-- Отправка на backend, получение ответов
-- Сохранение истории в сессии
-- Автоматическое добавление сообщения после отправки формы
+- Идентификация по телеграму при первом входе
+- Отображение истории сообщений (только в текущей сессии)
+- Отправка на backend с передачей телеграма в каждом запросе
+- Автоматическое приветствие после авторизации
 
-### API
+### Процесс взаимодействия
+1. Пользователь попадает в секцию Contact
+2. Отображается поле для ввода телеграма
+3. После ввода телеграма показывается чат с приветственным сообщением
+4. Все дальнейшие сообщения отправляются с телеграмом
+
+### API (ОБНОВЛЕНО)
 ```typescript
 // POST /api/chat
-interface ChatRequest { message: string; context: 'contact_form' | 'chat'; history: ChatMessage[]; }
-interface ChatResponse { message: string; timestamp: string; }
+interface ChatRequest { 
+  message: string; 
+  telegram: string;
+  history: ChatMessage[]; 
+}
+interface ChatResponse { 
+  message: string; 
+  timestamp: string; 
+}
 
-// POST /api/contact
-interface ContactRequest { name: string; telegram: string; message: string; }
-interface ContactResponse { success: boolean; chatMessage?: string; }
+// Убрано: POST /api/contact
 ```
 
 ### UX
 - Анимация печати, автоскролл
-- Индикатор отправки, кнопка отправки сообщения
-- Синхронизация формы и чата
+- Индикатор отправки
+- Валидация телеграма (@username или +7xxxxxxxxxx)
+- Возможность сменить телеграм (кнопка "Изменить")
 
 ## Блог
 - /blog - список статей
@@ -128,3 +152,5 @@ interface ContactResponse { success: boolean; chatMessage?: string; }
 - Mobile-first responsive дизайн
 - SEO оптимизация
 - Время загрузки < 3 сек
+- История чата сохраняется только в текущей сессии
+- Телеграм передается в каждом запросе к API
