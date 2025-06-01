@@ -1,4 +1,3 @@
-// lib/types.ts
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -10,9 +9,9 @@ export interface ChatState {
   isAuthenticated: boolean;
   telegram: string;
   messages: ChatMessage[];
+  isTyping: boolean;
 }
 
-// API типы
 export interface ChatRequest {
   message: string;
   telegram: string;
@@ -23,4 +22,3 @@ export interface ChatResponse {
   message: string;
   timestamp: string;
 }
-
