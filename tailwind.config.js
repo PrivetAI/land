@@ -38,8 +38,6 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/forms'),
     function({ addUtilities, addComponents }) {
       const utilities = {
         '.heading-xl': {
