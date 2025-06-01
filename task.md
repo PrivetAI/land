@@ -69,8 +69,9 @@ interface ProcessStep { step: number; title: string; description: string; durati
 - Принципы работы (5 преимуществ)
 
 ### Contact
-- Форма (имя, email, сообщение)
 - Процесс начала работы (4 шага)
+- инпуты для ввода сообщения и имени
+- пространство для ответов аи чат бота
 
 ## Дизайн система
 
@@ -90,12 +91,9 @@ interface ProcessStep { step: number; title: string; description: string; durati
 .heading-lg { @apply text-2xl md:text-4xl font-semibold tracking-tight; }
 .body { @apply text-base leading-relaxed; }
 .gradient-text { @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent; }
-
 .btn-primary { @apply bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105; }
 .btn-outline { @apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white; }
-
 .card { @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md hover:-translate-y-1; }
-
 .fade-in { @apply animate-in fade-in duration-500; }
 .slide-up { @apply animate-in slide-in-from-bottom-4 duration-500; }
 ```
@@ -103,8 +101,7 @@ interface ProcessStep { step: number; title: string; description: string; durati
 ## AI-чатбот
 
 ### Функции
-- Floating кнопка в правом нижнем углу
-- Модальное окно с историей сообщений
+- отображение истории сообщений
 - Отправка на backend, получение ответов
 - Сохранение истории в сессии
 

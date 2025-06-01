@@ -1,60 +1,84 @@
-import { ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import { InputHTMLAttributes, TextareaHTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
-interface CardProps {
-  children: ReactNode;
-  className?: string;
-  variant?: 'default' | 'flat' | 'elevated';
-  padding?: 'sm' | 'md' | 'lg';
-  hover?: boolean;
-  clickable?: boolean;
-  onClick?: () => void;
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+  variant?: 'default' | 'outline';
+}
+
+interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+  error?: string;
+  variant?: 'default' | 'outline';
 }
 
 const variants = {
-  default: 'bg-white rounded-xl shadow-sm border border-gray-200',
-  flat: 'bg-gray-50 rounded-lg',
-  elevated: 'bg-white rounded-xl shadow-lg border border-gray-100'
+  default: 'border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary',
+  outline: 'border-2 border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20'
 };
 
-const paddings = {
-  sm: 'p-4',
-  md: 'p-6', 
-  lg: 'p-8'
-};
+const baseClasses = 'w-full px-3 py-2 rounded-lg transition-colors outline-none disabled:opacity-50 disabled:cursor-not-allowed';
 
-export const Card = ({ 
-  children, 
-  className = '', 
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ 
+  label, 
+  error, 
   variant = 'default',
-  padding = 'md',
-  hover = true,
-  clickable = false,
-  onClick
-}: CardProps) => {
+  className = '',
+  ...props 
+}, ref) => {
   const classes = cn(
+    baseClasses,
     variants[variant],
-    paddings[padding],
-    'transition-all duration-300',
-    hover && 'hover:shadow-md hover:-translate-y-1',
-    clickable && 'cursor-pointer hover:scale-[1.02]',
+    error && 'border-error focus:border-error focus:ring-error/20',
     className
   );
   
-  const MotionComponent = clickable ? motion.button : motion.div;
+  return (
+    <div>
+      {label && (
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {label}
+        </label>
+      )}
+      <input ref={ref} className={classes} {...props} />
+      {error && (
+        <p className="mt-1 text-sm text-error">{error}</p>
+      )}
+    </div>
+  );
+});
+
+Input.displayName = 'Input';
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({ 
+  label, 
+  error, 
+  variant = 'default',
+  className = '',
+  ...props 
+}, ref) => {
+  const classes = cn(
+    baseClasses,
+    variants[variant],
+    'resize-vertical min-h-[80px]',
+    error && 'border-error focus:border-error focus:ring-error/20',
+    className
+  );
   
   return (
-    <MotionComponent
-      className={classes}
-      onClick={onClick}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileTap={clickable ? { scale: 0.98 } : {}}
-      transition={{ duration: 0.2 }}
-    >
-      {children}
-    </MotionComponent>
+    <div>
+      {label && (
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {label}
+        </label>
+      )}
+      <textarea ref={ref} className={classes} {...props} />
+      {error && (
+        <p className="mt-1 text-sm text-error">{error}</p>
+      )}
+    </div>
   );
-};
+});
+
+Textarea.displayName = 'Textarea';
