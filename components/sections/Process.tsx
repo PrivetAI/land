@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { Clock, Zap, Cog, Rocket } from 'lucide-react';
-import { ProcessStep } from '@/lib/types';
+import { ProcessStep } from '../../lib/types';
 
 const steps: ProcessStep[] = [
   {

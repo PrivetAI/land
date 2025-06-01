@@ -3,6 +3,7 @@ import { About } from "../components/sections/About";
 import { Pricing } from "../components/sections/Pricing";
 import { Process } from "../components/sections/Process";
 import { Services } from "../components/sections/Services";
+import { Hero } from "../components/sections/Hero";
 
 export default function HomePage() {
   return (

@@ -2,9 +2,9 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Mail, MessageCircle, Calendar, CheckCircle } from 'lucide-react';
-import { api } from '@/lib/api';
-import { ContactFormData } from '@/lib/types';
-import { useChatStore } from '@/lib/chat-store';
+import { api } from '../../lib/api';
+import { ContactFormData } from '../../lib/types';
+import { useChatStore } from '../../lib/chat-store';
 
 const steps = [
   { icon: MessageCircle, title: 'Обсуждение', description: 'Рассказываете о задаче' },

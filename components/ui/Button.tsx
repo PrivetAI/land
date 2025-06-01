@@ -1,6 +1,6 @@
 import { ReactNode, ButtonHTMLAttributes } from 'react';
 import { motion } from 'framer-motion';
-import { designSystem, createClassName } from '@/design-system';
+import { designSystem, createClassName } from '../../design-system';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';

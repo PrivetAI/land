@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { Bot, Workflow, BarChart3, Cog, ShoppingCart, Building2 } from 'lucide-react';
-import { Service } from '@/lib/types';
+import { Service } from '../../lib/types';
 
 const services: Service[] = [
   {
