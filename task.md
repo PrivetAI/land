@@ -18,23 +18,15 @@ app/
 
 components/
 ├── sections/                  # Hero, Services, Process, Pricing, About, Contact
-├── chat/                      # ChatBot, ChatMessage, ChatInput, ChatButton
+├── chat/                      # ChatMessage, ChatInput (убрать ChatButton и ChatBot)
 ├── blog/                      # BlogCard, BlogPost, BlogList
 └── ui/                        # Button, Card, Input
-
-lib/
-├── api.ts                     # API клиент
-├── types.ts                   # Типы
-└── utils.ts                   # Утилиты
 ```
 
 ## Типы данных
 ```typescript
 interface ChatMessage { id: string; role: 'user'|'assistant'; content: string; timestamp: Date; }
-interface ChatState { messages: ChatMessage[]; isLoading: boolean; isOpen: boolean; }
-interface BlogPost { slug: string; title: string; excerpt: string; content: string; publishedAt: Date; category: string; readTime: number; }
-interface Service { id: string; title: string; description: string; icon: string; features: string[]; }
-interface ProcessStep { step: number; title: string; description: string; duration: string; deliverables: string[]; }
+interface ContactForm { name: string; telegram: string; message: string; }
 ```
 
 ## Секции лендинга
@@ -68,10 +60,15 @@ interface ProcessStep { step: number; title: string; description: string; durati
 - "Почему мы лучше конкурентов" (4 пункта)
 - Принципы работы (5 преимуществ)
 
-### Contact
-- Процесс начала работы (4 шага)
-- инпуты для ввода сообщения и имени
-- пространство для ответов аи чат бота
+### **Contact (ОБНОВЛЕНО)**
+
+
+**Макет: ИИ-чат:**
+- Заголовок с иконкой бота
+- Область чата (фиксированная высота с прокруткой)
+- Поле ввода снизу + кнопка отправки
+- Начальное сообщение от бота
+
 
 ## Дизайн система
 
@@ -94,43 +91,40 @@ interface ProcessStep { step: number; title: string; description: string; durati
 .btn-primary { @apply bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105; }
 .btn-outline { @apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white; }
 .card { @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md hover:-translate-y-1; }
-.fade-in { @apply animate-in fade-in duration-500; }
-.slide-up { @apply animate-in slide-in-from-bottom-4 duration-500; }
 ```
 
 ## AI-чатбот
 
 ### Функции
-- отображение истории сообщений
+- Встроенный в секцию Contact
+- Отображение истории сообщений
 - Отправка на backend, получение ответов
 - Сохранение истории в сессии
+- Автоматическое добавление сообщения после отправки формы
 
 ### API
 ```typescript
 // POST /api/chat
-interface ChatRequest { message: string; context: 'landing_page'; history: ChatMessage[]; }
+interface ChatRequest { message: string; context: 'contact_form' | 'chat'; history: ChatMessage[]; }
 interface ChatResponse { message: string; timestamp: string; }
+
+// POST /api/contact
+interface ContactRequest { name: string; telegram: string; message: string; }
+interface ContactResponse { success: boolean; chatMessage?: string; }
 ```
 
 ### UX
 - Анимация печати, автоскролл
-- Индикатор отправки, счетчик непрочитанных
+- Индикатор отправки, кнопка отправки сообщения
+- Синхронизация формы и чата
 
 ## Блог
 - /blog - список статей
 - /blog/[slug] - отдельная статья
 - MDX файлы в content/blog/
-- Метаданные в frontmatter
-
-### Примеры статей
-- "Как ИИ меняет автоматизацию бизнеса в 2025 году"
-- "5 процессов, которые нужно автоматизировать в первую очередь"
-- "Интеграция CRM и мессенджеров: пошаговое руководство"
-- "ROI автоматизации: как измерить эффективность"
-- "Чатботы для бизнеса: от идеи до внедрения"
 
 ## Технические требования
+- Без модалов, все встроено в страницу
+- Mobile-first responsive дизайн
+- SEO оптимизация
 - Время загрузки < 3 сек
-- Mobile-first, 320px-2560px
-- SEO: semantic HTML, Open Graph, JSON-LD, sitemap
-- Браузеры: Chrome/Firefox/Safari/Edge 100+
