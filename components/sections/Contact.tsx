@@ -1,27 +1,35 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, Send, User, Edit3 } from 'lucide-react';
 import { useChatStore } from '@/lib/chat-store';
 import { validateTelegram } from '@/lib/api';
 import { AuthForm } from '../chat/AuthForm';
 import { ChatHeader } from '../chat/ChatHeader';
 import { ChatInput } from '../chat/ChatInput';
-import { ChatMessage } from '../chat/ChatBot';
-
-const WELCOME_MESSAGE: ChatMessageType = {
-  id: 'welcome',
-  role: 'assistant',
-  content: 'Привет! Я ИИ-консультант AutoTeam. Расскажите о ваших задачах автоматизации, и я подберу оптимальное решение для вашего бизнеса.',
-  timestamp: new Date()
-};
+import { ChatMessage } from '../chat/ChatMessage';
+import { TypingIndicator } from '../chat/TypingIndicator';
 
 export const Contact = () => {
-  const { isAuthenticated, telegram, authenticate, clearChat } = useChatStore();
+  const { 
+    isAuthenticated, 
+    telegram, 
+    messages, 
+    isTyping,
+    authenticate, 
+    clearChat,
+    sendMessage
+  } = useChatStore();
   
   const [telegramInput, setTelegramInput] = useState('');
   const [telegramError, setTelegramError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Автоскролл к последнему сообщению
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +50,7 @@ export const Contact = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
       authenticate(telegramInput.trim());
+      setTelegramInput('');
     } catch {
       setTelegramError('Произошла ошибка. Попробуйте еще раз.');
     } finally {
@@ -51,7 +60,6 @@ export const Contact = () => {
 
   const handleChangeTelegram = () => {
     clearChat();
-    clearMessages();
     setTelegramInput('');
     setTelegramError('');
   };
@@ -59,10 +67,6 @@ export const Contact = () => {
   const handleSendMessage = (content: string) => {
     sendMessage(content, telegram);
   };
-
-  const allMessages = isAuthenticated 
-    ? messages 
-    : [WELCOME_MESSAGE];
 
   return (
     <section id="contact" className="py-20 bg-gray-50">
@@ -94,10 +98,11 @@ export const Contact = () => {
           />
           
           <div className="h-80 overflow-y-auto p-4 space-y-4 bg-gray-50">
-            {allMessages.map((message) => (
+            {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
             {isTyping && <TypingIndicator />}
+            <div ref={messagesEndRef} />
           </div>
           
           {!isAuthenticated ? (
