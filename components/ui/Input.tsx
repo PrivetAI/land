@@ -1,89 +1,60 @@
-import { InputHTMLAttributes, TextareaHTMLAttributes, forwardRef } from 'react';
-import { designSystem, createClassName } from './design-system';
+import { ReactNode } from 'react';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string;
-  variant?: 'default' | 'outline';
+interface CardProps {
+  children: ReactNode;
+  className?: string;
+  variant?: 'default' | 'flat' | 'elevated';
+  padding?: 'sm' | 'md' | 'lg';
+  hover?: boolean;
+  clickable?: boolean;
+  onClick?: () => void;
 }
 
-interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label?: string;
-  error?: string;
-  variant?: 'default' | 'outline';
-}
+const variants = {
+  default: 'bg-white rounded-xl shadow-sm border border-gray-200',
+  flat: 'bg-gray-50 rounded-lg',
+  elevated: 'bg-white rounded-xl shadow-lg border border-gray-100'
+};
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ 
-  label, 
-  error, 
+const paddings = {
+  sm: 'p-4',
+  md: 'p-6', 
+  lg: 'p-8'
+};
+
+export const Card = ({ 
+  children, 
+  className = '', 
   variant = 'default',
-  className = '',
-  ...props 
-}, ref) => {
-  const inputConfig = designSystem.components.input;
-  
-  const classes = createClassName(
-    inputConfig.base,
-    inputConfig.variants[variant],
-    error ? 'border-error focus:ring-error' : '',
+  padding = 'md',
+  hover = true,
+  clickable = false,
+  onClick
+}: CardProps) => {
+  const classes = cn(
+    variants[variant],
+    paddings[padding],
+    'transition-all duration-300',
+    hover && 'hover:shadow-md hover:-translate-y-1',
+    clickable && 'cursor-pointer hover:scale-[1.02]',
     className
   );
   
-  return (
-    <div>
-      {label && (
-        <label className="block body font-medium text-gray-700 mb-2">
-          {label}
-        </label>
-      )}
-      <input
-        ref={ref}
-        className={classes}
-        {...props}
-      />
-      {error && (
-        <p className="mt-1 body text-error">{error}</p>
-      )}
-    </div>
-  );
-});
-
-Input.displayName = 'Input';
-
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({ 
-  label, 
-  error, 
-  variant = 'default',
-  className = '',
-  ...props 
-}, ref) => {
-  const inputConfig = designSystem.components.input;
-  
-  const classes = createClassName(
-    inputConfig.base,
-    inputConfig.variants[variant],
-    'resize-vertical',
-    error ? 'border-error focus:ring-error' : '',
-    className
-  );
+  const MotionComponent = clickable ? motion.button : motion.div;
   
   return (
-    <div>
-      {label && (
-        <label className="block body font-medium text-gray-700 mb-2">
-          {label}
-        </label>
-      )}
-      <textarea
-        ref={ref}
-        className={classes}
-        {...props}
-      />
-      {error && (
-        <p className="mt-1 body text-error">{error}</p>
-      )}
-    </div>
+    <MotionComponent
+      className={classes}
+      onClick={onClick}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileTap={clickable ? { scale: 0.98 } : {}}
+      transition={{ duration: 0.2 }}
+    >
+      {children}
+    </MotionComponent>
   );
-});
-
-Textarea.displayName = 'Textarea';
+};
