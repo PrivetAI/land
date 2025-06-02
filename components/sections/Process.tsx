@@ -1,9 +1,8 @@
 'use client';
 import { motion } from 'framer-motion';
 import { Clock, Zap, Cog, Rocket } from 'lucide-react';
-import { ProcessStep } from '../../lib/types';
 
-const steps: ProcessStep[] = [
+const steps: any[] = [
   {
     step: 1,
     title: 'Экспресс-аудит',
@@ -12,7 +11,7 @@ const steps: ProcessStep[] = [
     deliverables: ['Карта процессов', 'Приоритезация задач', 'Техническое предложение']
   },
   {
-    step: 2,
+    step: 2,  
     title: 'Быстрое прототипирование',
     description: 'Создаем MVP решение для демонстрации результата',
     duration: '3-7 дней',
@@ -34,7 +33,6 @@ const steps: ProcessStep[] = [
   }
 ];
 
-const iconMap = { Clock, Zap, Cog, Rocket };
 
 export const Process = () => {
   return (
