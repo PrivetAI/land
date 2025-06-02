@@ -24,7 +24,6 @@ export class ChatAPI {
     }
   }
 
-  // Вспомогательная функция для форматирования истории чата
   static formatHistory(messages: ChatMessage[]): ChatMessage[] {
     return messages.map(msg => ({
       ...msg,
@@ -33,9 +32,13 @@ export class ChatAPI {
   }
 }
 
-// Валидация телеграма
+// Валидация телеграма - поддержка любых номеров телефонов и username
 export const validateTelegram = (telegram: string): boolean => {
   const usernameRegex = /^@[a-zA-Z0-9_]{5,32}$/;
-  const phoneRegex = /^\+7\d{10}$/;
-  return usernameRegex.test(telegram) || phoneRegex.test(telegram);
+  const phoneRegex = /^\+\d{1,4}\d{4,14}$/; // Международный формат
+  const localPhoneRegex = /^\d{10,15}$/; // Локальный формат
+  
+  return usernameRegex.test(telegram) || 
+         phoneRegex.test(telegram) || 
+         localPhoneRegex.test(telegram);
 };

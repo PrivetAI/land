@@ -1,6 +1,5 @@
 'use client';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, KeyboardEvent } from 'react';
 import { Send } from 'lucide-react';
 
 interface ChatInputProps {
@@ -12,33 +11,41 @@ interface ChatInputProps {
 export const ChatInput = ({ onSendMessage, disabled, placeholder = "Введите сообщение..." }: ChatInputProps) => {
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message.trim() && !disabled) {
-      onSendMessage(message.trim());
-      setMessage('');
+  const handleSubmit = () => {
+    if (!message.trim() || disabled) return;
+    onSendMessage(message.trim());
+    setMessage('');
+  };
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex space-x-2">
-      <input
-        type="text"
+    <div className="flex items-end space-x-2">
+      <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyPress={handleKeyPress}
         placeholder={placeholder}
         disabled={disabled}
-        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+        rows={1}
+        className="flex-1 px-3 py-2 bg-gray-50 border-0 rounded-lg outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none min-h-[40px] max-h-32"
+        style={{ 
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#cbd5e1 transparent'
+        }}
       />
-      <motion.button
-        type="submit"
+      <button
+        onClick={handleSubmit}
         disabled={disabled || !message.trim()}
-        className="bg-gradient-primary text-white p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[40px]"
-        whileHover={!(disabled || !message.trim()) ? { scale: 1.05 } : {}}
-        whileTap={!(disabled || !message.trim()) ? { scale: 0.95 } : {}}
+        className="flex items-center justify-center w-10 h-10 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        <Send className="h-5 w-5" />
-      </motion.button>
-    </form>
+        <Send className="h-4 w-4" />
+      </button>
+    </div>
   );
 };

@@ -2,11 +2,12 @@ import { create } from 'zustand';
 import { ChatMessage, ChatState } from './types';
 
 interface ChatStore extends ChatState {
+  userMessageCount: number;
   authenticate: (telegram: string) => void;
   clearChat: () => void;
   addMessage: (message: ChatMessage) => void;
   setTyping: (typing: boolean) => void;
-  sendMessage: (content: string, telegram: string) => Promise<void>;
+  sendMessage: (content: string, telegram?: string) => Promise<void>;
 }
 
 export const useChatStore = create<ChatStore>((set, get) => ({
@@ -14,33 +15,35 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   telegram: '',
   messages: [],
   isTyping: false,
+  userMessageCount: 0,
 
   authenticate: (telegram) => set({ 
     isAuthenticated: true, 
-    telegram,
-    messages: [{
-      id: 'welcome',
-      role: 'assistant',
-      content: 'Привет! Я ИИ-консультант AutoTeam. Расскажите о ваших задачах автоматизации, и я подберу оптимальное решение для вашего бизнеса.',
-      timestamp: new Date()
-    }]
+    telegram
   }),
 
   clearChat: () => set({ 
     isAuthenticated: false, 
     telegram: '', 
     messages: [],
-    isTyping: false
+    isTyping: false,
+    userMessageCount: 0
   }),
 
   addMessage: (message) => set(state => ({ 
-    messages: [...state.messages, message] 
+    messages: [...state.messages, message],
+    userMessageCount: message.role === 'user' ? state.userMessageCount + 1 : state.userMessageCount
   })),
 
   setTyping: (typing) => set({ isTyping: typing }),
 
   sendMessage: async (content, telegram) => {
-    const { messages, addMessage, setTyping } = get();
+    const { messages, addMessage, setTyping, userMessageCount, isAuthenticated } = get();
+    
+    // Проверяем лимит сообщений
+    if (userMessageCount >= 3 && !isAuthenticated) {
+      return;
+    }
     
     // Добавляем сообщение пользователя
     const userMessage: ChatMessage = {
@@ -60,7 +63,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: content,
-          telegram,
+          telegram: telegram || '',
           history: messages
         })
       });
