@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/Button'
 const typewriterPhrases = [
   'Быстрая автоматизация бизнеса',
   'Измеримый ROI за 2-4 недели',
-  'ИИ-решения для роста'
+  'ИИ-решения для роста',
+  "Замещаем 80% рутины искусственным интеллектом",
+
 ];
 
 export const Hero = () => {
@@ -57,7 +59,7 @@ export const Hero = () => {
             <span className="animate-pulse">|</span>
           </h1>
           <h2 className="heading-lg text-gray-600 mb-8">
-            Команда разработчиков-энтузиастов
+            Специалисты по внедрению ИИ в бизнес-процессы
           </h2>
         </motion.div>
 
@@ -92,17 +94,17 @@ export const Hero = () => {
             Посмотреть услуги
           </Button>
         </motion.div>
-
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.8 }}
           className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
         >
+          
           {[
-            { number: '60+', label: 'Проектов' },
+            { number: 'до 80%', label: 'Экономии времени' },
             { number: '2-4', label: 'Недели на результат' },
-            { number: '300%', label: 'Средний ROI' }
+            { number: '24/7', label: 'Работают ваши боты' }
           ].map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-3xl font-bold gradient-text">{stat.number}</div>
