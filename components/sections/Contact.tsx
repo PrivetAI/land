@@ -108,7 +108,7 @@ export const Contact = () => {
       {
         id: '1',
         role: 'assistant',
-        content: 'Привет! Я ИИ-ассистент команды автоматизаторов. Расскажите, какие задачи хотите автоматизировать в вашем бизнесе?',
+        content: 'Привет! Я AI-ассистент команды автоматизаторов. Расскажите, какие задачи хотите автоматизировать в вашем бизнесе?',
         timestamp: new Date()
       }
     ],
@@ -125,7 +125,7 @@ export const Contact = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  useEffect(scrollToBottom, [chatState.messages, chatState.showTelegramPrompt]);
+  useEffect(scrollToBottom,   [chatState.messages, chatState.showTelegramPrompt]);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isSending) return;
@@ -199,7 +199,7 @@ export const Contact = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="heading-lg text-gray-900 mb-4">
-            Консультация с ИИ-ассистентом
+            Консультация с AI-ассистентом
           </h2>
           <p className="body text-gray-600 max-w-2xl mx-auto">
             Получите персонализированную консультацию по автоматизации вашего бизнеса
