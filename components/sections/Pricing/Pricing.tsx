@@ -4,8 +4,7 @@ import { pricingPlans } from './data';
 import { motion } from 'framer-motion';
 import { Check, Star } from 'lucide-react';
 
-
-const benefits = ['Без скрытых платежей', 'Гарантия результата', 'Бесплатная консультация'];
+const benefits = ['GPT чат-боты', 'Умный анализ данных', 'Автоматизация задач'];
 
 export const PricingHeader = () => (
   <motion.div 
@@ -17,16 +16,16 @@ export const PricingHeader = () => (
   >
     <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full mb-6">
       <Star className="h-4 w-4 text-primary" />
-      <span className="text-sm font-medium text-primary">Прозрачное ценообразование</span>
+      <span className="text-sm font-medium text-primary">AI-автоматизация бизнеса</span>
     </div>
     
     <h2 className="text-4xl font-bold text-gray-900 mb-4">
-      Тарифы и <span className="gradient-text">стоимость</span>
+      AI-решения и <span className="gradient-text">автоматизация</span>
     </h2>
     
     <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
-      Выберите оптимальное решение для автоматизации вашего бизнеса.<br />
-      Гарантированный результат • Поэтапная оплата • Постоянная поддержка
+      Внедряем ИИ для решения реальных задач вашего бизнеса.<br />
+      Умные чат-боты • Анализ данных • Автоматизация процессов
     </p>
     
     <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
@@ -46,8 +45,6 @@ export const PricingHeader = () => (
     </div>
   </motion.div>
 );
-
-
 
 export const Pricing = () => {
   return (

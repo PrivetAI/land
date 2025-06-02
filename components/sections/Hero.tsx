@@ -58,8 +58,8 @@ export const Hero = () => {
             <span className="gradient-text">{displayText}</span>
             <span className="animate-pulse">|</span>
           </h1>
-          <h2 className="heading-lg text-gray-600 mb-8">
-            Специалисты по внедрению ИИ в бизнес-процессы
+           <h2 className="heading-lg text-gray-600 mb-8 mx-auto">
+            Команда по внедрению ИИ в бизнес-процессы
           </h2>
         </motion.div>
 
