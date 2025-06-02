@@ -26,8 +26,8 @@ export const About = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="heading-lg text-gray-900 mb-4">Почему выбирают нас</h2>
-          <p className="body-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-2xl md:text-4xl font-semibold text-gray-900 mb-4">Почему выбирают нас</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Команда профессионалов, которая превращает идеи в работающие решения
           </p>
         </motion.div>
@@ -38,26 +38,29 @@ export const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <h3 className="heading-md text-gray-900 mb-8">Наши преимущества</h3>
+            <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-8">Наши преимущества</h3>
             <div className="space-y-6">
-              {advantages.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  className="flex items-start space-x-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">
-                    <item.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="heading-sm text-gray-900 mb-1">{item.title}</h4>
-                    <p className="body text-gray-600">{item.description}</p>
-                  </div>
-                </motion.div>
-              ))}
+              {advantages.map((item, index) => {
+                const IconComponent = item.icon;
+                return (
+                  <motion.div
+                    key={item.title}
+                    className="flex items-start space-x-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <IconComponent className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h4>
+                      <p className="text-base text-gray-600">{item.description}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
           
@@ -66,26 +69,29 @@ export const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <h3 className="heading-md text-gray-900 mb-8">Принципы работы</h3>
+            <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-8">Принципы работы</h3>
             <div className="space-y-6">
-              {principles.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  className="flex items-start space-x-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <div className="w-12 h-12 bg-gradient-to-r from-accent to-secondary rounded-lg flex items-center justify-center flex-shrink-0">
-                    <item.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="heading-sm text-gray-900 mb-1">{item.title}</h4>
-                    <p className="body text-gray-600">{item.description}</p>
-                  </div>
-                </motion.div>
-              ))}
+              {principles.map((item, index) => {
+                const IconComponent = item.icon;
+                return (
+                  <motion.div
+                    key={item.title}
+                    className="flex items-start space-x-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <IconComponent className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h4>
+                      <p className="text-base text-gray-600">{item.description}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>

@@ -52,23 +52,26 @@ export const Services = () => (
       </motion.div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {services.map((service, index) => (
-          <motion.div
-            key={service.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Card className="h-full">
-              <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mb-4">
-                <service.icon className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="heading-sm text-gray-900 mb-3">{service.title}</h3>
-              <p className="body text-gray-600">{service.description}</p>
-            </Card>
-          </motion.div>
-        ))}
+        {services.map((service, index) => {
+          const IconComponent = service.icon;
+          return (
+            <motion.div
+              key={service.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Card className="h-full">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mb-4">
+                  <IconComponent className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="heading-sm text-gray-900 mb-3">{service.title}</h3>
+                <p className="body text-gray-600">{service.description}</p>
+              </Card>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   </section>
