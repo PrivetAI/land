@@ -100,23 +100,6 @@ export const Process = () => {
             })}
           </div>
         </div>
-        
-        <motion.div 
-          className="text-center mt-16"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8">
-            <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">Готовы начать?</h3>
-            <p className="text-base text-gray-600 mb-6">
-              Первый экспресс-аудит проводим бесплатно
-            </p>
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105">
-              Получить бесплатный аудит
-            </button>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

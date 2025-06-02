@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button'
 
 const typewriterPhrases = [
-  'Быстрая автоматизация бизнеса',
+  'Автоматизация бизнеса с AI за недели, а не месяцы',
   'Измеримый ROI за 2-4 недели',
   'ИИ-решения для роста',
   "Замещаем 80% рутины искусственным интеллектом",
