@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import Head from 'next/head';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Автоматизация бизнеса | Команда разработчиков-энтузиастов',
-  description: 'Быстрая автоматизация бизнеса с измеримым ROI. AI-ассистенты, интеграции, аналитика.',
-  keywords: 'автоматизация, ИИ, чатботы, интеграции, аналитика',
+  title: 'AI-агенты для автоматизации бизнеса | Команда разработчиков-энтузиастов',
+  description: 'AI-автоматизация бизнеса с измеримым ROI. AI-системы для продаж, маркетинга и аналитика.',
+  keywords: 'автоматизация, ИИ, чатботы, интеграции, искусственный интеллект',
   openGraph: {
     title: 'Автоматизация бизнеса | Команда разработчиков-энтузиастов',
     description: 'Быстрая автоматизация бизнеса с измеримым ROI',
@@ -22,6 +23,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
+        
+      
       <body className={inter.className}>
         <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-sm border-b border-gray-200 z-40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

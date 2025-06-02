@@ -4,10 +4,11 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button'
 
 const typewriterPhrases = [
-  'Автоматизация бизнеса с AI за недели, а не месяцы',
+  'AI - агенты для бизнеса',
   'Измеримый ROI за 2-4 недели',
   'ИИ-решения для роста',
-  "Замещаем 80% рутины искусственным интеллектом",
+  "Замещаем 80% рутины AI-агентами",
+  'Автоматизация бизнеса с AI за недели, а не месяцы',
 
 ];
 
@@ -104,7 +105,7 @@ export const Hero = () => {
           {[
             { number: 'до 80%', label: 'Экономии времени' },
             { number: '2-4', label: 'Недели на результат' },
-            { number: '24/7', label: 'Работают ваши боты' }
+            { number: '24/7', label: 'Работают ваши агенты' }
           ].map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-3xl font-bold gradient-text">{stat.number}</div>
