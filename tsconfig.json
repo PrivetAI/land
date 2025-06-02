@@ -28,7 +28,7 @@
       "@/content/*": ["content/*"],
       "@/lib/*": ["lib/*"],
       "@/ui/*": ["components/ui/*"],
-      "@/design-system": ["design-system.ts"]
+      "@/design-system": ["design-system.ts"],
     }
   },
   "include": [
