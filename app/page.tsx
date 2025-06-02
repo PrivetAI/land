@@ -1,7 +1,7 @@
 import { About } from "../components/sections/About";
 import { Pricing } from "../components/sections/Pricing/Pricing";
 import { Process } from "../components/sections/Process";
-import Services from "../components/sections/Services";
+import Services from "../components/sections/Services/Services";
 import { Hero } from "../components/sections/Hero";
 import { Contact } from "../components/sections/Contact";
 

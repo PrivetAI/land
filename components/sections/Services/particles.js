@@ -1,189 +1,196 @@
-export const generateParticles = (count = 30) => {
-  const particles = [];
-  const colors = ['blue', 'purple', 'cyan', 'indigo', 'pink', 'emerald', 'orange', 'teal', 'violet', 'rose', 'sky', 'amber', 'lime', 'fuchsia', 'slate'];
-  const sizes = ['w-0.5 h-0.5', 'w-1 h-1', 'w-1.5 h-1.5', 'w-2 h-2'];
-  const animations = [
-    'float 3s ease-in-out infinite',
-    'orbit 6s linear infinite', 
-    'drift 4s ease-in-out infinite',
-    'pulse 3s ease-in-out infinite',
-    'zigzag 5s ease-in-out infinite',
-    'spiral 4s linear infinite',
-    'wave 3.5s ease-in-out infinite',
-    'breathe 4s ease-in-out infinite',
-    'pendulum 4.5s ease-in-out infinite',
-    'rotate 5s linear infinite',
-    'bounce 2.5s ease-in-out infinite',
-    'shake 3s ease-in-out infinite',
-    'flicker 2s ease-in-out infinite',
-    'magneticFloat 4s ease-in-out infinite',
-    'technoPulse 3s ease-in-out infinite'
-  ];
+const getColorValue = (color) => {
+  const colorMap = {
+    blue: '#3b82f6', purple: '#8b5cf6', cyan: '#06b6d4',
+    indigo: '#6366f1', violet: '#7c3aed', slate: '#64748b'
+  };
+  return colorMap[color] || '#3b82f6';
+};
 
-  const positions = [
-    'top-8 left-12', 'top-16 right-20', 'top-24 left-1/4', 'top-32 right-1/3',
-    'top-40 left-1/5', 'top-48 right-1/4', 'top-1/4 left-16', 'top-1/3 right-12',
-    'top-1/2 left-24', 'top-3/5 right-16', 'top-2/3 left-20', 'top-3/4 right-24',
-    'top-4/5 left-1/3', 'bottom-1/4 right-1/5', 'bottom-1/3 left-1/4', 'bottom-2/5 right-1/3',
-    'bottom-1/2 left-1/6', 'bottom-3/5 right-1/6', 'bottom-2/3 left-1/5', 'bottom-3/4 right-1/4',
-    'top-12 left-2/3', 'top-20 right-2/5', 'top-28 left-3/4', 'top-36 right-3/5',
-    'top-44 left-4/5', 'top-52 right-4/5', 'top-1/5 left-2/5', 'top-2/5 right-3/4',
-    'top-3/5 left-3/5', 'top-4/5 right-1/2'
-  ];
+const colors = ['blue', 'purple', 'cyan', 'indigo', 'violet', 'slate'];
+const sizes = ['w-0.5 h-0.5', 'w-1 h-1', 'w-1.5 h-1.5'];
+const animations = ['float', 'orbit', 'drift', 'pulse', 'spiral', 'breathe'];
+const positions = [
+  'top-8 left-12', 'top-16 right-20', 'top-24 left-1/4', 'top-32 right-1/3',
+  'top-40 left-1/5', 'top-1/4 left-16', 'top-1/3 right-12', 'top-1/2 left-24',
+  'top-3/5 right-16', 'top-2/3 left-20', 'bottom-1/4 right-1/5', 'bottom-1/3 left-1/4',
+  'bottom-1/2 left-1/6', 'bottom-3/5 right-1/6', 'top-12 left-2/3'
+];
 
-  for (let i = 0; i < count; i++) {
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const size = sizes[Math.floor(Math.random() * sizes.length)];
-    const animation = animations[Math.floor(Math.random() * animations.length)];
-    const position = positions[i % positions.length];
-    const delay = (i * 0.3) + Math.random() * 2;
-    const animationDelay = Math.random() * 3;
-    
-    particles.push({
-      id: i,
-      className: `absolute ${position} ${size} bg-${color}-400 rounded-full opacity-0`,
-      style: {
-        animation: `${animation} ${animationDelay}s, fadeIn 0.8s ease-out ${delay}s forwards`,
-        filter: 'blur(0.5px)',
-        boxShadow: `0 0 8px rgba(59, 130, 246, 0.3)`
-      }
+const particleStates = {
+  NORMAL: 'normal',
+  GATHERING: 'gathering',
+  ARROW: 'arrow',
+  SCATTERING: 'scattering'
+};
+
+const getArrowPositions = (centerX, centerY, participantCount) => {
+  const positions = [];
+  const tailLength = 80;
+  const headWidth = 50;
+  const headHeight = 40;
+  
+  // Хвост стрелки (вертикальная линия)
+  const tailParticles = Math.floor(participantCount * 0.6);
+  for (let i = 0; i < tailParticles; i++) {
+    positions.push({
+      x: centerX + (Math.random() - 0.5) * 8,
+      y: centerY + (i / tailParticles) * tailLength
     });
   }
   
+  // Наконечник стрелки (треугольник)
+  const headParticles = participantCount - tailParticles;
+  for (let i = 0; i < headParticles; i++) {
+    const progress = i / headParticles;
+    const yOffset = -progress * headHeight;
+    const xOffset = (0.5 - progress) * headWidth * (1 - progress);
+    
+    positions.push({
+      x: centerX + xOffset + (Math.random() - 0.5) * 6,
+      y: centerY + yOffset + (Math.random() - 0.5) * 4
+    });
+  }
+  
+  return positions;
+};
+
+export const generateParticles = (count = 150) => {
+  const particles = [];
+  
+  for (let i = 0; i < count; i++) {
+    const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    const randomPosition = positions[Math.floor(Math.random() * positions.length)];
+    const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+    
+    particles.push({
+      id: i,
+      state: particleStates.NORMAL,
+      currentAnimation: randomAnimation,
+      originalPosition: randomPosition,
+      className: `particle absolute ${randomPosition} ${randomSize} rounded-full`,
+      style: {
+        backgroundColor: getColorValue(randomColor),
+        animation: `${randomAnimation} ${Math.random() * 3 + 2}s infinite, fadeIn 0.8s ease-out ${i * 0.1}s forwards`,
+        filter: 'blur(0.5px)',
+        boxShadow: '0 0 8px rgba(59, 130, 246, 0.3)',
+        zIndex: 15,
+        opacity: 0,
+        transition: 'transform 1s ease-out, opacity 0.3s ease'
+      }
+    });
+  }
   return particles;
 };
 
+export const createArrowAnimation = (particles, containerRef) => {
+  if (!containerRef?.current) return;
+  
+  const container = containerRef.current;
+  const rect = container.getBoundingClientRect();
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
+  
+  // Выбираем случайных участников (30-70% от всех частиц)
+  const participantCount = Math.floor(particles.length * (0.3 + Math.random() * 0.4));
+  const participants = [...particles]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, participantCount);
+  
+  const arrowPositions = getArrowPositions(centerX, centerY, participantCount);
+  
+  // Фаза сбора
+  participants.forEach((particle, index) => {
+    const element = container.querySelector(`[data-particle-id="${particle.id}"]`);
+    if (!element) return;
+    
+    particle.state = particleStates.GATHERING;
+    const targetPos = arrowPositions[index] || arrowPositions[arrowPositions.length - 1];
+    
+    element.style.animation = 'none';
+    element.style.transform = `translate(${targetPos.x - centerX}px, ${targetPos.y - centerY}px)`;
+    element.style.transition = `transform ${1 + Math.random() * 2}s ease-out`;
+  });
+  
+  // Удержание в форме стрелки
+  setTimeout(() => {
+    participants.forEach(particle => {
+      particle.state = particleStates.ARROW;
+    });
+  }, 2000);
+  
+  // Разлет обратно
+  setTimeout(() => {
+    participants.forEach(particle => {
+      const element = container.querySelector(`[data-particle-id="${particle.id}"]`);
+      if (!element) return;
+      
+      particle.state = particleStates.SCATTERING;
+      const newAnimation = animations[Math.floor(Math.random() * animations.length)];
+      particle.currentAnimation = newAnimation;
+      
+      element.style.transform = 'translate(0, 0)';
+      element.style.animation = `${newAnimation} ${Math.random() * 3 + 2}s infinite`;
+      element.style.transition = 'transform 1s ease-out';
+    });
+    
+    setTimeout(() => {
+      participants.forEach(particle => {
+        particle.state = particleStates.NORMAL;
+      });
+    }, 1000);
+  }, 5000);
+};
+
+export const startRandomArrowCycles = (particles, containerRef) => {
+  const runCycle = () => {
+    // Случайная пауза перед следующим циклом (5-8 секунд)
+    const delay = 5000 + Math.random() * 3000;
+    
+    setTimeout(() => {
+      createArrowAnimation(particles, containerRef);
+      runCycle(); // Рекурсивный запуск следующего цикла
+    }, delay);
+  };
+  
+  runCycle();
+};
+
 export const particleAnimations = `
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-15px) rotate(180deg); }
-  }
-  
-  @keyframes orbit {
-    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-    25% { transform: translate(25px, -15px) rotate(90deg) scale(1.2); }
-    50% { transform: translate(0, -30px) rotate(180deg) scale(0.8); }
-    75% { transform: translate(-25px, -15px) rotate(270deg) scale(1.1); }
-    100% { transform: translate(0, 0) rotate(360deg) scale(1); }
-  }
-  
-  @keyframes drift {
-    0%, 100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
-    25% { transform: translateX(-20px) translateY(-10px) rotate(45deg); }
-    50% { transform: translateX(15px) translateY(-8px) rotate(90deg); }
-    75% { transform: translateX(12px) translateY(5px) rotate(135deg); }
-  }
-  
-  @keyframes pulse {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.6; }
-    50% { transform: scale(1.5) rotate(180deg); opacity: 0.3; }
-  }
-  
-  @keyframes zigzag {
-    0% { transform: translateX(0px) translateY(0px) rotate(0deg); }
-    20% { transform: translateX(20px) translateY(-12px) rotate(72deg); }
-    40% { transform: translateX(-15px) translateY(-25px) rotate(144deg); }
-    60% { transform: translateX(18px) translateY(-20px) rotate(216deg); }
-    80% { transform: translateX(-10px) translateY(-8px) rotate(288deg); }
-    100% { transform: translateX(0px) translateY(0px) rotate(360deg); }
-  }
-  
-  @keyframes spiral {
-    0% { transform: rotate(0deg) translateX(20px) rotate(0deg) scale(1); }
-    100% { transform: rotate(360deg) translateX(20px) rotate(-360deg) scale(1.3); }
-  }
-  
-  @keyframes wave {
-    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-    25% { transform: translateY(-12px) translateX(8px) rotate(45deg); }
-    50% { transform: translateY(0px) translateX(15px) rotate(90deg); }
-    75% { transform: translateY(12px) translateX(8px) rotate(135deg); }
-  }
-  
-  @keyframes breathe {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; filter: blur(0px); }
-    50% { transform: scale(1.8) rotate(180deg); opacity: 0.2; filter: blur(1px); }
-  }
-  
-  @keyframes pendulum {
-    0%, 100% { transform: rotate(0deg) translateY(0px) scale(1); }
-    25% { transform: rotate(20deg) translateY(-8px) scale(1.1); }
-    50% { transform: rotate(0deg) translateY(-12px) scale(0.9); }
-    75% { transform: rotate(-20deg) translateY(-8px) scale(1.1); }
-  }
-  
-  @keyframes rotate {
-    0% { transform: rotate(0deg) translateX(18px) scale(1); }
-    100% { transform: rotate(360deg) translateX(18px) scale(1.2); }
-  }
-  
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-    25% { transform: translateY(-18px) rotate(90deg) scale(1.3); }
-    50% { transform: translateY(-25px) rotate(180deg) scale(0.8); }
-    75% { transform: translateY(-12px) rotate(270deg) scale(1.1); }
-  }
-  
-  @keyframes shake {
-    0%, 100% { transform: translateX(0px) rotate(0deg); }
-    10% { transform: translateX(-8px) rotate(18deg); }
-    20% { transform: translateX(8px) rotate(-18deg); }
-    30% { transform: translateX(-6px) rotate(12deg); }
-    40% { transform: translateX(6px) rotate(-12deg); }
-    50% { transform: translateX(-4px) rotate(8deg); }
-    60% { transform: translateX(4px) rotate(-8deg); }
-    70% { transform: translateX(-2px) rotate(4deg); }
-    80% { transform: translateX(2px) rotate(-4deg); }
-    90% { transform: translateX(-1px) rotate(2deg); }
-  }
-  
-  @keyframes flicker {
-    0%, 100% { opacity: 0.8; transform: scale(1); }
-    20% { opacity: 0.3; transform: scale(1.2); }
-    40% { opacity: 0.9; transform: scale(0.8); }
-    60% { opacity: 0.2; transform: scale(1.4); }
-    80% { opacity: 0.7; transform: scale(0.9); }
-  }
-  
-  @keyframes magneticFloat {
-    0%, 100% { 
-      transform: translateX(0px) translateY(0px) rotate(0deg); 
-      filter: blur(0px);
-    }
-    25% { 
-      transform: translateX(-15px) translateY(-20px) rotate(90deg); 
-      filter: blur(0.5px);
-    }
-    50% { 
-      transform: translateX(10px) translateY(-35px) rotate(180deg); 
-      filter: blur(1px);
-    }
-    75% { 
-      transform: translateX(20px) translateY(-15px) rotate(270deg); 
-      filter: blur(0.5px);
-    }
-  }
-  
-  @keyframes technoPulse {
-    0%, 100% { 
-      transform: scale(1) rotate(0deg); 
-      opacity: 0.6; 
-      box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
-    }
-    33% { 
-      transform: scale(1.4) rotate(120deg); 
-      opacity: 0.9; 
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
-    }
-    66% { 
-      transform: scale(0.8) rotate(240deg); 
-      opacity: 0.4; 
-      box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
-    }
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(180deg); }
+}
+@keyframes orbit {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  25% { transform: translate(25px, -15px) rotate(90deg) scale(1.2); }
+  50% { transform: translate(0, -30px) rotate(180deg) scale(0.8); }
+  75% { transform: translate(-25px, -15px) rotate(270deg) scale(1.1); }
+  100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+}
+@keyframes drift {
+  0%, 100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
+  25% { transform: translateX(-20px) translateY(-10px) rotate(45deg); }
+  50% { transform: translateX(15px) translateY(-8px) rotate(90deg); }
+  75% { transform: translateX(12px) translateY(5px) rotate(135deg); }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.6; }
+  50% { transform: scale(1.5) rotate(180deg); opacity: 0.3; }
+}
+@keyframes spiral {
+  0% { transform: rotate(0deg) translateX(20px) rotate(0deg) scale(1); }
+  100% { transform: rotate(360deg) translateX(20px) rotate(-360deg) scale(1.3); }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; filter: blur(0px); }
+  50% { transform: scale(1.8) rotate(180deg); opacity: 0.2; filter: blur(1px); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 0.7; }
+}
+.particle {
+  will-change: transform, opacity;
+}
 `;

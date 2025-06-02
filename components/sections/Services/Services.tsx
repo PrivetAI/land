@@ -1,6 +1,8 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bot, Link, BarChart3, Workflow, ShoppingCart, Building } from 'lucide-react';
+import { generateParticles, particleAnimations } from './particles';
+import ParticleArrowSystem from './arrow';
 
 const services = [
   {
@@ -52,9 +54,24 @@ const Card = ({ children, className = '' }) => (
 );
 
 export default function Services() {
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    setParticles(generateParticles());
+  }, []);
+
   return (
-    <section id="services" className="py-20 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="py-20 bg-white relative overflow-hidden">
+      <ParticleArrowSystem/>
+      {particles.slice(0, 15).map(particle => (
+        <div
+          key={particle.id}
+          className={particle.className}
+          style={particle.style}
+        />
+      ))}
+      
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[0.9] transform-gpu">
             <div
@@ -64,7 +81,7 @@ export default function Services() {
                 animationDelay: '0.2s'
               }}
             >
-              <span className="text-gray-900" style={{ background: 'none', backgroundClip: 'unset' }}>
+              <span style={{ color: '#0f172a !important', background: 'none !important', backgroundImage: 'none !important', WebkitBackgroundClip: 'unset !important', backgroundClip: 'unset !important' }}>
                 Революция
               </span>
             </div>
@@ -75,7 +92,7 @@ export default function Services() {
                 animationDelay: '0.5s'
               }}
             >
-              <span className="text-blue-600" style={{ background: 'none', backgroundClip: 'unset' }}>
+              <span style={{ color: '#2563eb !important', background: 'none !important', backgroundImage: 'none !important', WebkitBackgroundClip: 'unset !important', backgroundClip: 'unset !important' }}>
                 автоматизации
               </span>
             </div>
@@ -86,12 +103,11 @@ export default function Services() {
                 animationDelay: '0.8s'
               }}
             >
-              <span className="text-gray-800" style={{ background: 'none', backgroundClip: 'unset' }}>
-                бизне са
+              <span style={{ color: '#1e293b !important', background: 'none !important', backgroundImage: 'none !important', WebkitBackgroundClip: 'unset !important', backgroundClip: 'unset !important' }}>
+                бизнеса
               </span>
             </div>
           </h2>
-
 
           <div
             className="opacity-0 translate-y-6"
@@ -107,7 +123,14 @@ export default function Services() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
+          {particles.slice(15).map(particle => (
+            <div
+              key={`card-${particle.id}`}
+              className={particle.className}
+              style={{...particle.style, zIndex: 25}}
+            />
+          ))}
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
@@ -119,7 +142,7 @@ export default function Services() {
                   animationDelay: `${index * 0.1}s`
                 }}
               >
-                <Card className="h-full group hover:shadow-xl hover:border-blue-100 transition-all duration-500">
+                <Card className="h-full group hover:shadow-xl hover:border-blue-100 transition-all duration-500 relative z-20 bg-white/90 backdrop-blur-sm">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
                     <IconComponent className="h-6 w-6 text-white" />
                   </div>
@@ -155,8 +178,10 @@ export default function Services() {
               transform: translateY(0);
             }
           }
+          
+          ${particleAnimations}
         `
       }} />
     </section>
   );
-} 
+}
