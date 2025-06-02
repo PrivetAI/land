@@ -63,7 +63,7 @@ export const Hero = () => {
             Команда по внедрению ИИ в бизнес-процессы
           </h2>
         </motion.div>
-
+       
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

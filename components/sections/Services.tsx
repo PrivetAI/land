@@ -53,14 +53,57 @@ const Card = ({ children, className = '' }) => (
 
 export default function Services() {
   return (
-    <section id="services" className="py-20 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="py-20 bg-white relative overflow-hidden">
+      {/* Анимированные частицы для всей секции */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Частицы в заголовке */}
+        <div className="absolute top-32 left-1/4 w-1 h-1 bg-blue-400 rounded-full opacity-0" style={{
+          animation: 'float 4s ease-in-out infinite, fadeIn 0.5s ease-out 1.5s forwards'
+        }} />
+        <div className="absolute top-24 right-1/4 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-0" style={{
+          animation: 'float 3s ease-in-out infinite 1s, fadeIn 0.5s ease-out 2s forwards'
+        }} />
+        <div className="absolute top-40 left-1/3 w-0.5 h-0.5 bg-cyan-400 rounded-full opacity-0" style={{
+          animation: 'float 3.5s ease-in-out infinite 0.5s, fadeIn 0.5s ease-out 2.5s forwards'
+        }} />
+        
+        {/* Частицы в области карточек */}
+        <div className="absolute top-1/2 left-12 w-1 h-1 bg-indigo-300 rounded-full opacity-0" style={{
+          animation: 'orbit 8s linear infinite, fadeIn 0.8s ease-out 3s forwards'
+        }} />
+        <div className="absolute top-3/4 right-16 w-0.5 h-0.5 bg-pink-300 rounded-full opacity-0" style={{
+          animation: 'drift 6s ease-in-out infinite, fadeIn 0.8s ease-out 3.5s forwards'
+        }} />
+        <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-emerald-300 rounded-full opacity-0" style={{
+          animation: 'pulse 4s ease-in-out infinite, fadeIn 0.8s ease-out 4s forwards'
+        }} />
+        <div className="absolute bottom-1/3 left-1/5 w-1 h-1 bg-orange-300 rounded-full opacity-0" style={{
+          animation: 'zigzag 7s ease-in-out infinite, fadeIn 0.8s ease-out 4.5s forwards'
+        }} />
+        <div className="absolute top-2/3 left-2/3 w-0.5 h-0.5 bg-teal-300 rounded-full opacity-0" style={{
+          animation: 'spiral 5s linear infinite, fadeIn 0.8s ease-out 5s forwards'
+        }} />
+        
+        {/* Дополнительные частицы */}
+        <div className="absolute top-1/4 left-3/4 w-1 h-1 bg-violet-300 rounded-full opacity-0" style={{
+          animation: 'float 3.2s ease-in-out infinite 2s, fadeIn 0.8s ease-out 5.5s forwards'
+        }} />
+        <div className="absolute bottom-1/4 right-1/5 w-0.5 h-0.5 bg-rose-300 rounded-full opacity-0" style={{
+          animation: 'wave 6s sine infinite, fadeIn 0.8s ease-out 6s forwards'
+        }} />
+        <div className="absolute top-3/5 left-1/6 w-1.5 h-1.5 bg-sky-300 rounded-full opacity-0" style={{
+          animation: 'breathe 4.5s ease-in-out infinite, fadeIn 0.8s ease-out 6.5s forwards'
+        }} />
+        <div className="absolute bottom-2/5 right-2/5 w-1 h-1 bg-amber-300 rounded-full opacity-0" style={{
+          animation: 'pendulum 5.5s ease-in-out infinite, fadeIn 0.8s ease-out 7s forwards'
+        }} />
+        <div className="absolute top-4/5 left-1/2 w-0.5 h-0.5 bg-lime-300 rounded-full opacity-0" style={{
+          animation: 'rotate 8s linear infinite, fadeIn 0.8s ease-out 7.5s forwards'
+        }} />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16 relative overflow-hidden">
-          {/* Фоновые декоративные элементы */}
-          <div className="absolute -top-16 -left-16 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-2xl animate-pulse" />
-          <div className="absolute -top-8 -right-12 w-24 h-24 bg-gradient-to-br from-purple-400/15 to-blue-400/15 rounded-full blur-xl" />
-          
-          {/* Главный заголовок с wow эффектом */}
           <div className="relative">
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[0.9] transform-gpu">
               <div 
@@ -97,20 +140,8 @@ export default function Services() {
                 </span>
               </div>
             </h2>
-            
-            {/* Анимированные частицы */}
-            <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-blue-400 rounded-full opacity-0" style={{
-              animation: 'float 3s ease-in-out infinite, fadeIn 0.5s ease-out 1.5s forwards'
-            }} />
-            <div className="absolute top-1/3 right-1/4 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-0" style={{
-              animation: 'float 3s ease-in-out infinite 1s, fadeIn 0.5s ease-out 2s forwards'
-            }} />
-            <div className="absolute bottom-1/4 left-1/3 w-0.5 h-0.5 bg-cyan-400 rounded-full opacity-0" style={{
-              animation: 'float 3s ease-in-out infinite 0.5s, fadeIn 0.5s ease-out 2.5s forwards'
-            }} />
           </div>
 
-          {/* Подзаголовок с задержкой */}
           <div 
             className="opacity-0 translate-y-6"
             style={{
@@ -123,14 +154,6 @@ export default function Services() {
               <span className="text-gray-800 font-semibold"> интеллектуальной автоматизации процессов</span>
             </p>
           </div>
-
-          {/* Светящийся эффект снизу */}
-          <div 
-            className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-64 h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0"
-            style={{
-              animation: 'fadeIn 1s ease-out 2s forwards, glow 2s ease-in-out infinite 3s'
-            }}
-          />
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -183,32 +206,70 @@ export default function Services() {
           }
           
           @keyframes fadeIn {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
           }
           
           @keyframes float {
-            0%, 100% {
-              transform: translateY(0px);
-            }
-            50% {
-              transform: translateY(-10px);
-            }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
           }
           
-          @keyframes glow {
-            0%, 100% {
-              opacity: 0.5;
-              transform: translateX(-50%) scaleX(1);
-            }
-            50% {
-              opacity: 0.8;
-              transform: translateX(-50%) scaleX(1.2);
-            }
+          @keyframes orbit {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -10px) rotate(90deg); }
+            50% { transform: translate(0, -20px) rotate(180deg); }
+            75% { transform: translate(-20px, -10px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+          }
+          
+          @keyframes drift {
+            0%, 100% { transform: translateX(0px) translateY(0px); }
+            25% { transform: translateX(-15px) translateY(-8px); }
+            50% { transform: translateX(10px) translateY(-5px); }
+            75% { transform: translateX(8px) translateY(3px); }
+          }
+          
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.3); opacity: 0.4; }
+          }
+          
+          @keyframes zigzag {
+            0% { transform: translateX(0px) translateY(0px); }
+            25% { transform: translateX(15px) translateY(-10px); }
+            50% { transform: translateX(-10px) translateY(-20px); }
+            75% { transform: translateX(12px) translateY(-15px); }
+            100% { transform: translateX(0px) translateY(0px); }
+          }
+          
+          @keyframes spiral {
+            0% { transform: rotate(0deg) translateX(15px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(15px) rotate(-360deg); }
+          }
+          
+          @keyframes wave {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-8px) translateX(5px); }
+            50% { transform: translateY(0px) translateX(10px); }
+            75% { transform: translateY(8px) translateX(5px); }
+          }
+          
+          @keyframes breathe {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.6; }
+            50% { transform: scale(1.4) rotate(180deg); opacity: 0.3; }
+          }
+          
+          @keyframes pendulum {
+            0%, 100% { transform: rotate(0deg) translateY(0px); }
+            25% { transform: rotate(15deg) translateY(-5px); }
+            50% { transform: rotate(0deg) translateY(-8px); }
+            75% { transform: rotate(-15deg) translateY(-5px); }
+          }
+          
+          @keyframes rotate {
+            0% { transform: rotate(0deg) translateX(12px); }
+            100% { transform: rotate(360deg) translateX(12px); }
           }
         `
       }} />
