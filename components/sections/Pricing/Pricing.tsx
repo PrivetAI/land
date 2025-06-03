@@ -14,10 +14,6 @@ export const PricingHeader = () => (
     viewport={{ once: true }}
     transition={{ duration: 0.8 }}
   >
-    <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full mb-6">
-      <Star className="h-4 w-4 text-primary" />
-      <span className="text-sm font-medium text-primary">AI-автоматизация бизнеса</span>
-    </div>
     
     <h2 className="text-4xl font-bold text-gray-900 mb-4">
       AI-решения и <span className="gradient-text">автоматизация</span>
