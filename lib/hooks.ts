@@ -36,7 +36,6 @@ export const useChat = (): UseChatReturn => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  useEffect(scrollToBottom, [messages, showTelegramLink]);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isSending || showTelegramLink) return;
