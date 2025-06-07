@@ -91,7 +91,6 @@ export default function Services() {
           filter: 'blur(60px)'
         }}
       />
-
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="text-center mb-16">
           <div className="relative">
@@ -102,7 +101,7 @@ export default function Services() {
                   <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent opacity-0 animate-title-glow" />
                 </span>
               </div>
-              <div className="title-line" style={{ animationDelay: '0.3s' }}>
+              <div className="title-line title-line-highlight" style={{ animationDelay: '0.3s' }}>
                 <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent relative title-highlight font-black">
                   автоматизации
                 </span>
@@ -175,18 +174,30 @@ export default function Services() {
           @keyframes title-reveal {
             0% {
               opacity: 0;
-              transform: translateY(40px) scale(0.9);
-              filter: blur(10px);
+              transform: translateY(40px) scale(0.95);
             }
             60% {
-              opacity: 0.8;
-              transform: translateY(-8px) scale(1.02);
-              filter: blur(2px);
+              opacity: 0.9;
+              transform: translateY(-4px) scale(1.01);
             }
             100% {
               opacity: 1;
               transform: translateY(0) scale(1);
-              filter: blur(0);
+            }
+          }
+          
+          @keyframes title-reveal-highlight {
+            0% {
+              opacity: 0;
+              transform: translateY(40px) scale(0.95);
+            }
+            60% {
+              opacity: 0.9;
+              transform: translateY(-4px) scale(1.01);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0) scale(1);
             }
           }
           
@@ -226,6 +237,13 @@ export default function Services() {
             display: block;
             animation: title-reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
+            isolation: isolate;
+          }
+          
+          .title-line-highlight {
+            animation: title-reveal-highlight 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            z-index: 1;
+            position: relative;
           }
           
           @media (max-width: 768px) {
@@ -256,6 +274,8 @@ export default function Services() {
           .title-highlight {
             position: relative;
             overflow: hidden;
+            display: inline-block;
+            isolation: isolate;
           }
           
           .title-highlight::after {
@@ -267,6 +287,7 @@ export default function Services() {
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
             animation: highlight-sweep 3s ease-in-out infinite 1.5s;
+            z-index: 1;
           }
           
           .animate-fade-up {

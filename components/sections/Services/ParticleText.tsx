@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 const CFG = {
   COUNT: [80, 150],
@@ -6,8 +6,8 @@ const CFG = {
   SIZES: [2, 3, 4],
   SPEED: 0.3,
   TIMING: { TEXT: 2000, COOLDOWN: 5000 },
-  GRAVITY: 0.02,
-  SCROLL_SENSITIVITY: 0.1
+  AVOIDANCE_FORCE: 0.015,
+  CENTER_ZONE: { left: 20, right: 80, top: 20, bottom: 80 }
 };
 
 export default function ParticleText() {
@@ -17,34 +17,75 @@ export default function ParticleText() {
   const timeoutsRef = useRef([]);
   const observerRef = useRef(null);
   const textPointsRef = useRef([]);
-  const scrollYRef = useRef(0);
   const lastFormTimeRef = useRef(0);
+  const isMobileRef = useRef(false);
   
   const [isVisible, setIsVisible] = useState(false);
-  const [scrollDirection, setScrollDirection] = useState(0); // -1 up, 0 none, 1 down
+  const [hasFormed, setHasFormed] = useState(false);
 
-  const addTimeout = (fn, delay) => {
+  const containerStyle = useMemo(() => ({ zIndex: 30 }), []);
+
+  const addTimeout = useCallback((fn, delay) => {
     const id = setTimeout(fn, delay);
     timeoutsRef.current.push(id);
     return id;
-  };
+  }, []);
 
-  const createParticles = (container, isMobile) => {
-    const count = CFG.COUNT[isMobile ? 0 : 1];
-    particlesRef.current = Array.from({ length: count }, () => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: CFG.SIZES[Math.floor(Math.random() * CFG.SIZES.length)],
-      color: CFG.COLORS[Math.floor(Math.random() * CFG.COLORS.length)],
-      vx: (Math.random() - 0.5) * CFG.SPEED,
-      vy: (Math.random() - 0.5) * CFG.SPEED,
-      targetX: null,
-      targetY: null,
-      isInText: false,
-      opacity: Math.random() * 0.4 + 0.4,
-      element: null,
-      baseY: Math.random() * 100
-    }));
+  const getAvoidanceForce = useCallback((x, y) => {
+    const { left, right, top, bottom } = CFG.CENTER_ZONE;
+    let fx = 0, fy = 0;
+    
+    // Увеличиваем зону проверки для более сильного избегания
+    if (x > left - 10 && x < right + 10 && y > top - 10 && y < bottom + 10) {
+      const centerX = (left + right) / 2;
+      const centerY = (top + bottom) / 2;
+      
+      // Вектор от центра к частице
+      const dx = x - centerX;
+      const dy = y - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance < 30) { // Радиус избегания
+        const force = CFG.AVOIDANCE_FORCE * (30 - distance) / 30;
+        fx = (dx / distance) * force;
+        fy = (dy / distance) * force;
+      }
+    }
+    
+    return { fx, fy };
+  }, []);
+
+  const createParticles = useCallback((container) => {
+    const count = CFG.COUNT[isMobileRef.current ? 0 : 1];
+    particlesRef.current = Array.from({ length: count }, () => {
+      let x, y;
+      let attempts = 0;
+      do {
+        x = Math.random() * 100;
+        y = Math.random() * 100;
+        attempts++;
+      } while (
+        attempts < 50 && // Ограничиваем попытки
+        x > CFG.CENTER_ZONE.left - 5 && 
+        x < CFG.CENTER_ZONE.right + 5 && 
+        y > CFG.CENTER_ZONE.top - 5 && 
+        y < CFG.CENTER_ZONE.bottom + 5
+      );
+
+      return {
+        x,
+        y,
+        size: CFG.SIZES[Math.floor(Math.random() * CFG.SIZES.length)],
+        color: CFG.COLORS[Math.floor(Math.random() * CFG.COLORS.length)],
+        vx: (Math.random() - 0.5) * CFG.SPEED,
+        vy: (Math.random() - 0.5) * CFG.SPEED,
+        targetX: null,
+        targetY: null,
+        isInText: false,
+        opacity: Math.random() * 0.4 + 0.4,
+        element: null
+      };
+    });
 
     particlesRef.current.forEach(p => {
       const div = document.createElement('div');
@@ -61,29 +102,30 @@ export default function ParticleText() {
         zIndex: '25',
         pointerEvents: 'none',
         boxShadow: `0 0 ${p.size * 2}px ${p.color}60`,
-        transition: 'all 0.3s ease'
+        transition: 'all 0.3s ease',
+        willChange: 'transform'
       });
       container.appendChild(div);
       p.element = div;
     });
-  };
+  }, []);
 
-  const generateTextPoints = (isMobile) => {
-    const [w, h] = isMobile ? [280, 80] : [360, 100];
+  const generateTextPoints = useCallback(() => {
+    const [w, h] = isMobileRef.current ? [280, 80] : [360, 100];
     const canvas = document.createElement('canvas');
     canvas.width = w;
     canvas.height = h;
     const ctx = canvas.getContext('2d');
     
     ctx.fillStyle = 'black';
-    ctx.font = `bold ${isMobile ? 50 : 70}px Arial`;
+    ctx.font = `bold ${isMobileRef.current ? 50 : 70}px Arial`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('AUTO', w / 2, h / 2);
 
     const data = ctx.getImageData(0, 0, w, h).data;
     const points = [];
-    const step = isMobile ? 6 : 5;
+    const step = isMobileRef.current ? 6 : 5;
     
     for (let y = 0; y < h; y += step) {
       for (let x = 0; x < w; x += step) {
@@ -93,40 +135,31 @@ export default function ParticleText() {
       }
     }
     textPointsRef.current = points;
-  };
+  }, []);
 
-  const handleScroll = () => {
-    const currentY = window.scrollY;
-    const delta = currentY - scrollYRef.current;
+  const animate = useCallback(() => {
+    const particles = particlesRef.current;
+    const len = particles.length;
     
-    if (Math.abs(delta) > 5) {
-      setScrollDirection(delta > 0 ? 1 : -1);
-      scrollYRef.current = currentY;
-    }
-  };
-
-  const animate = () => {
-    particlesRef.current.forEach(p => {
+    for (let i = 0; i < len; i++) {
+      const p = particles[i];
+      
       if (p.isInText && p.targetX !== null) {
         p.x += (p.targetX - p.x) * 0.08;
         p.y += (p.targetY - p.y) * 0.08;
       } else {
-        // Scroll-based movement
-        if (scrollDirection !== 0 && isVisible) {
-          p.vy += scrollDirection * CFG.GRAVITY;
-          p.vy = Math.max(-2, Math.min(3, p.vy));
-        } else {
-          // Natural floating
-          p.vx += (Math.random() - 0.5) * 0.01;
-          p.vy += (Math.random() - 0.5) * 0.01;
-          p.vx *= 0.98;
-          p.vy *= 0.98;
-        }
+        p.vx += (Math.random() - 0.5) * 0.01;
+        p.vy += (Math.random() - 0.5) * 0.01;
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+        
+        const { fx, fy } = getAvoidanceForce(p.x, p.y);
+        p.vx += fx;
+        p.vy += fy;
         
         p.x += p.vx;
         p.y += p.vy;
         
-        // Boundaries
         if (p.x < -2 || p.x > 102) p.vx *= -0.8;
         if (p.y < -2 || p.y > 102) p.vy *= -0.8;
         
@@ -138,12 +171,12 @@ export default function ParticleText() {
         p.element.style.left = `${p.x}%`;
         p.element.style.top = `${p.y}%`;
       }
-    });
+    }
     
     animationRef.current = requestAnimationFrame(animate);
-  };
+  }, [getAvoidanceForce]);
 
-  const formText = (isMobile) => {
+  const formText = useCallback(() => {
     const now = Date.now();
     if (now - lastFormTimeRef.current < CFG.TIMING.COOLDOWN) return;
     
@@ -153,7 +186,7 @@ export default function ParticleText() {
 
     const shuffled = [...particlesRef.current].sort(() => Math.random() - 0.5);
     const use = Math.min(shuffled.length, points.length);
-    const [tw, th] = isMobile ? [50, 12] : [45, 15];
+    const [tw, th] = isMobileRef.current ? [50, 12] : [45, 15];
     const [ox, oy] = [(100 - tw) / 2, (100 - th) / 2];
     
     shuffled.forEach((p, i) => {
@@ -182,54 +215,57 @@ export default function ParticleText() {
         }
       });
     }, CFG.TIMING.TEXT);
-  };
+  }, [addTimeout]);
+
+  const handleIntersection = useCallback(([entry]) => {
+    const visible = entry.intersectionRatio >= 0.3;
+    setIsVisible(visible);
+    
+    if (visible && !hasFormed) {
+      // Задержка перед первым формированием текста
+      const timeout = setTimeout(() => {
+        formText();
+        setHasFormed(true);
+      }, 1000);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [formText, hasFormed]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const isMobile = window.innerWidth < 768;
-    createParticles(container, isMobile);
-    generateTextPoints(isMobile);
-    animate();
+    isMobileRef.current = window.innerWidth < 768;
+    createParticles(container);
+    generateTextPoints();
+    
+    animationRef.current = requestAnimationFrame(animate);
 
-    observerRef.current = new IntersectionObserver(([entry]) => {
-      const visible = entry.intersectionRatio >= 0.3;
-      setIsVisible(visible);
-      
-      if (visible) {
-        formText(isMobile);
-      }
-    }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] });
+    observerRef.current = new IntersectionObserver(handleIntersection, { 
+      threshold: [0.3],
+      rootMargin: '-10%'
+    });
 
     observerRef.current.observe(container);
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       timeoutsRef.current.forEach(clearTimeout);
       if (observerRef.current) observerRef.current.disconnect();
-      window.removeEventListener('scroll', handleScroll);
       particlesRef.current.forEach(p => {
         if (p.element && container.contains(p.element)) {
           container.removeChild(p.element);
         }
       });
     };
-  }, []);
-
-  // Reset scroll direction after movement stops
-  useEffect(() => {
-    const timer = setTimeout(() => setScrollDirection(0), 150);
-    return () => clearTimeout(timer);
-  }, [scrollDirection]);
+  }, [createParticles, generateTextPoints, animate, handleIntersection]);
 
   return (
     <div
       ref={containerRef}
       className="fixed inset-0 overflow-hidden pointer-events-none"
-      style={{ zIndex: 30 }}
+      style={containerStyle}
     />
   );
 }
